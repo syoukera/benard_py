@@ -90,6 +90,6 @@ ENV/
 .ropeproject
 
 
-cavity_py/*
+benard_py/*
 *.rst~
 *.rst.un~

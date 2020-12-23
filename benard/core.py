@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-class cavity():
+class benard():
     '''Class for strage global variables'''
     
     def __init__(self):
