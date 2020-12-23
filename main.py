@@ -1,7 +1,7 @@
-from cavity import cavity
+from benard import benard
 
 def main():
-    var = cavity()
+    var = benard()
 
     maxit = 100
     imon = 5
