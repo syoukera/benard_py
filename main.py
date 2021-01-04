@@ -14,6 +14,7 @@ def main():
         var.calcu()
         var.calcv()
         var.calcp()
+        var.calct()
 
         resorm = var.resorm/var.flowin
         resoru = var.resoru/var.xmonin

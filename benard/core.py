@@ -74,12 +74,21 @@ class benard():
         self.resorm = 0.0
         self.DU = np.zeros((self.nx, self.ny))
         self.DV = np.zeros((self.nx, self.ny))
+
+        self.nswpt = 1
+        # self.ipref = 2
+        # self.jpref = 2
+        self.urft = 0.8
+        self.resort = 0.0
+        # self.DU = np.zeros((self.nx, self.ny))
+        # self.DV = np.zeros((self.nx, self.ny))
         
         self.U = np.zeros((self.nx, self.ny))
         self.U[:, -1] = self.uwall
         self.V = np.zeros((self.nx, self.ny))
         self.P = np.zeros((self.nx, self.ny))
         self.PP = np.zeros((self.nx, self.ny))
+        self.T = np.zeros((self.nx, self.ny))
         
         self.viscos = 1.0e-3
         self.densit = 1000.0
@@ -291,4 +300,49 @@ class benard():
         for i in range(1, self.nim1):
             for j in range(1, self.njm1):
                 self.P[i, j] = self.P[i, j] + self.urfp*(self.PP[i, j] - ppref)
-    #             self.PP[i, j] = 0.0
+    
+    def calct(self):
+        
+        self.resort = 0.0
+        
+        for i in range(1, self.nim1):
+            for j in range(1, self.njm1):
+                self.AN[i, j] = self.densit*self.SEW[i]*self.DV[i  , j+1]
+                self.AS[i, j] = self.densit*self.SEW[i]*self.DV[i  , j  ]
+                self.AE[i, j] = self.densit*self.SNS[j]*self.DU[i+1, j  ]
+                self.AW[i, j] = self.densit*self.SNS[j]*self.DU[i  , j  ]
+                
+                cn = self.densit*self.V[i  , j+1]*self.SEW[i]
+                cs = self.densit*self.V[i  , j  ]*self.SEW[i]
+                ce = self.densit*self.U[i+1, j  ]*self.SNS[j]
+                cw = self.densit*self.U[i  , j  ]*self.SNS[j]
+                smp = cn - cs + ce - cw
+                
+                self.SP[i, j] = 0.0
+                self.SU[i, j] = - smp
+                
+                self.resort += abs(smp)
+            
+        for i in range(1, self.nim1):
+            for j in range(1, self.njm1):
+                self.AP[i, j] = self.AN[i, j] + self.AS[i, j] + self.AE[i, j] + self.AW[i, j] \
+                              - self.SP[i, j]
+                
+        self.PP *= 0.0
+                
+        for i in range(self.nswpt):
+            self.lisolv(2, 2, self.T)      
+
+        # for i in range(1, self.nim1):
+        #     for j in range(1, self.njm1):
+        #         if i != 1: 
+        #             self.U[i, j] = self.U[i, j] + self.DU[i, j]*(self.PP[i-1, j  ] - self.PP[i, j])
+        #         if j != 1:
+        #             self.V[i, j] = self.V[i, j] + self.DV[i, j]*(self.PP[i  , j-1] - self.PP[i, j])
+                
+    #     ppref = self.PP[self.ipref-1, self.jpref-1]
+        
+    #     for i in range(1, self.nim1):
+    #         for j in range(1, self.njm1):
+    #             self.P[i, j] = self.P[i, j] + self.urfp*(self.PP[i, j] - ppref)
+    # #             self.PP[i, j] = 0.0
