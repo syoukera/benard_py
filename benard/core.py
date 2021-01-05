@@ -14,8 +14,8 @@ class benard():
         self.njm1 = self.ny - 1 # index of -1 
                 
         self.xmax = 1.0
-        self.ymax = 1.0
-        self.uwall = 0.0
+        self.ymax = 0.1
+        self.uwall = 1.0e-4
         self.t_high = 1.0
         self.t_low  = 0.0
         self.t_source = 0.0
@@ -51,7 +51,7 @@ class benard():
         self.YV = np.zeros(self.ny)
         self.YV[1:] = (self.Y[1:].copy() + self.Y[:-1].copy())/2
         
-        self.nswpu = 1
+        self.nswpu = 2
         self.urfu = 0.4
         self.resoru = 0.0
         self.DXEPU = np.zeros(self.nx)
@@ -61,7 +61,7 @@ class benard():
         self.SEWU = np.zeros(self.nx)
         self.SEWU[1:] = (self.X[1:].copy() - self.X[:-1].copy())
         
-        self.nswpv = 1
+        self.nswpv = 2
         self.urfv = 0.4
         self.resorv = 0.0
         self.DYNPV = np.zeros(self.ny)
@@ -71,7 +71,7 @@ class benard():
         self.SNSV = np.zeros(self.ny)
         self.SNSV[1:] = self.Y[1:].copy() - self.Y[:-1].copy()
         
-        self.nswpp = 1
+        self.nswpp = 10
         self.ipref = 2
         self.jpref = 2
         self.urfp = 0.4
@@ -79,12 +79,12 @@ class benard():
         self.DU = np.zeros((self.nx, self.ny))
         self.DV = np.zeros((self.nx, self.ny))
 
-        self.nswpt = 1
+        self.nswpt = 4
         self.urft = 0.4
         self.resort = 0.0
         
         self.U = np.zeros((self.nx, self.ny))
-        # self.U[:, -1] = self.uwall
+        self.U[:, -1] = self.uwall
         self.V = np.zeros((self.nx, self.ny))
         self.P = np.zeros((self.nx, self.ny))
         self.PP = np.zeros((self.nx, self.ny))
@@ -95,7 +95,7 @@ class benard():
         self.viscos = 1.0e-3
         self.density = 998.2
         self.capacity = 4.1816e3
-        self.conduct = 1.0
+        self.conduct = 0.594
         self.gravity = 9.8
         
         self.AP = np.zeros((self.nx, self.ny))
