@@ -3,7 +3,7 @@ from benard import benard
 def main():
     sim = benard()
 
-    maxit = 100
+    maxit = 3
     imon = 5
     jmon = 5
     sormax = 1.0e-3
@@ -20,7 +20,7 @@ def main():
         # ayashi
         resort = sim.resort/sim.xmonin
         
-        print(f'{niter} {resoru:.2e} {resorv:.2e} {resorm:.2e} ', end='')
+        print(f'{niter} {resoru:.2e} {resorv:.2e} {resorm:.2e} {resort:.2e}  ', end='')
         print(f'{sim.U[imon, jmon]:.2e} {sim.V[imon, jmon]:.2e} ', end ='')
         print(f'{sim.P[imon, jmon]:.2e} {sim.T[imon, jmon]:.2e}', end='\n')
         

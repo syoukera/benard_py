@@ -5,8 +5,8 @@ class benard():
     '''Class for strage global variables'''
     
     def __init__(self):
-        self.nx = 20
-        self.ny = 20
+        self.nx = 52
+        self.ny = 12
         
         self.ni = self.nx
         self.nj = self.ny
@@ -15,11 +15,21 @@ class benard():
                 
         self.xmax = 1.0
         self.ymax = 0.1
-        self.uwall = 1.0e-4
-        self.t_high = 1.0
-        self.t_low  = 0.0
+        self.vmax = 1.0e-5
+
+        self.viscos = 1.0e-3
+        self.density = 998.2
+        self.capacity = 4.1816e3
+        self.conduct = 0.594
+        self.gravity = 9.8
+
         self.t_source = 0.0
         self.beta = 2.07e-3
+        self.ra = 1000 # Rayleigh number
+        self.t_low  = 0.0
+        self.t_high = self.t_low + self.ra/self.beta/self.gravity \
+                      /self.ymax**3*self.conduct/self.density      \
+                      *self.viscos/self.density
         
         self.dx = self.xmax/float(self.nx-2)
         self.dy = self.ymax/float(self.ny-2)
@@ -84,19 +94,12 @@ class benard():
         self.resort = 0.0
         
         self.U = np.zeros((self.nx, self.ny))
-        self.U[:, -1] = self.uwall
+        # self.U[:, -1] = self.uwall
         self.V = np.zeros((self.nx, self.ny))
         self.P = np.zeros((self.nx, self.ny))
         self.PP = np.zeros((self.nx, self.ny))
-        self.T = np.zeros((self.nx, self.ny))
-        self.T[0, :] = self.t_high
+        self.T = np.ones((self.nx, self.ny))*self.t_high
         self.T[-1, :] = self.t_low
-        
-        self.viscos = 1.0e-3
-        self.density = 998.2
-        self.capacity = 4.1816e3
-        self.conduct = 0.594
-        self.gravity = 9.8
         
         self.AP = np.zeros((self.nx, self.ny))
         self.AN = np.zeros((self.nx, self.ny))
@@ -106,8 +109,8 @@ class benard():
         self.SU = np.zeros((self.nx, self.ny))
         self.SP = np.zeros((self.nx, self.ny))
         
-        self.flowin = (self.SNS*self.density*self.uwall).sum()
-        self.xmonin = (self.SNS*self.density*self.uwall*self.uwall).sum()
+        self.flowin = (self.SNS*self.density*self.vmax).sum()
+        self.xmonin = (self.SNS*self.density*self.vmax*self.vmax).sum()
 
 
     def lisolv(self, istart, jstart, PHI):
