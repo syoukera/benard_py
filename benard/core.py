@@ -52,7 +52,7 @@ class benard():
         self.YV[1:] = (self.Y[1:].copy() + self.Y[:-1].copy())/2
         
         self.nswpu = 1
-        self.urfu = 0.5
+        self.urfu = 0.4
         self.resoru = 0.0
         self.DXEPU = np.zeros(self.nx)
         self.DXEPU[1:-1] = self.XU[2:].copy() - self.XU[1:-1].copy()
@@ -62,7 +62,7 @@ class benard():
         self.SEWU[1:] = (self.X[1:].copy() - self.X[:-1].copy())
         
         self.nswpv = 1
-        self.urfv = 0.5
+        self.urfv = 0.4
         self.resorv = 0.0
         self.DYNPV = np.zeros(self.ny)
         self.DYNPV[1:-1] = self.YV[2:].copy() - self.YV[1:-1].copy()
@@ -74,18 +74,14 @@ class benard():
         self.nswpp = 1
         self.ipref = 2
         self.jpref = 2
-        self.urfp = 0.8
+        self.urfp = 0.4
         self.resorm = 0.0
         self.DU = np.zeros((self.nx, self.ny))
         self.DV = np.zeros((self.nx, self.ny))
 
         self.nswpt = 1
-        # self.ipref = 2
-        # self.jpref = 2
-        self.urft = 0.8
+        self.urft = 0.4
         self.resort = 0.0
-        # self.DU = np.zeros((self.nx, self.ny))
-        # self.DV = np.zeros((self.nx, self.ny))
         
         self.U = np.zeros((self.nx, self.ny))
         # self.U[:, -1] = self.uwall
@@ -331,28 +327,32 @@ class benard():
                 self.AW[i, j] = max(abs(0.5*cw), dw) + 0.5*cw
                 self.SU[i, j] = 0.0
                 self.SP[i, j] = self.t_source
-                
-        yp = self.YV[-1] - self.Y[-2]
+
+        # north                
+        # yp = self.YV[-1] - self.Y[-2]
         j = self.njm1-1
-        for i in range(2, self.nim1):
-            tmult = self.viscos/yp
-            self.SP[i, j] = self.SP[i, j] - tmult*self.SEWU[i]
-            self.SU[i, j] = self.SU[i, j] + tmult*self.SEWU[i]*self.U[i, j+1]
+        for i in range(1, self.nim1):
+            # tmult = self.viscos/yp
+            # self.SP[i, j] = self.SP[i, j] - tmult*self.SEWU[i]
+            # self.SU[i, j] = self.SU[i, j] + tmult*self.SEWU[i]*self.U[i, j+1]
             self.AN[i, j] = 0.0
             
-        yp = self.Y[1] - self.YV[1]
+        # south
+        # yp = self.Y[1] - self.YV[1]
         j = 1
-        for i in range(2, self.nim1):
-            tmult = self.viscos/yp
-            self.SP[i, j] = self.SP[i, j] - tmult*self.SEWU[i]
-            self.SU[i, j] = self.SU[i, j] + tmult*self.SEWU[i]*self.U[i, j-1]
+        for i in range(1, self.nim1):
+            # tmult = self.viscos/yp
+            # self.SP[i, j] = self.SP[i, j] - tmult*self.SEWU[i]
+            # self.SU[i, j] = self.SU[i, j] + tmult*self.SEWU[i]*self.U[i, j-1]
             self.AS[i, j] = 0.0
             
-        for j in range(1, self.njm1):
-            self.AE[-2, j] = 0.0
-            self.AW[2, j] = 0.0
+        # east and west
+        # for j in range(1, self.njm1):
+
+        self.AE[-2, :] = 0.0
+        self.AW[1, :] = 0.0
             
-        self.resoru = 0.0
+        self.resort = 0.0
         for i in range(2, self.nim1):
             for j in range(1, self.njm1):
                 self.AP[i, j] = self.AN[i, j] + self.AS[i, j] + self.AE[i, j] + self.AW[i, j] \
@@ -360,13 +360,13 @@ class benard():
                 resor = self.AN[i, j]*self.U[i  , j+1] + self.AS[i, j]*self.U[i  , j-1] \
                       + self.AE[i, j]*self.U[i+1, j  ] + self.AW[i, j]*self.U[i-1, j  ] \
                       - self.AP[i, j]*self.U[i  , j  ] + self.SU[i, j]
-                self.resoru += abs(resor)
+                self.resort += abs(resor)
                 
                 # under relaxation
-                self.AP[i, j] = self.AP[i, j]/self.urfu
-                self.SU[i, j] = self.SU[i, j] + (1.0 - self.urfu)*self.AP[i, j]*self.U[i, j]
+                self.AP[i, j] = self.AP[i, j]/self.urft
+                self.SU[i, j] = self.SU[i, j] + (1.0 - self.urft)*self.AP[i, j]*self.U[i, j]
                 
-        for i in range(self.nswpu):
+        for i in range(self.nswpt):
             self.lisolv(2, 2, self.T)      
 
     def update(self):
