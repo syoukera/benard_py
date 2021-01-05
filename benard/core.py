@@ -93,7 +93,7 @@ class benard():
         self.T[-1, :] = self.t_low
         
         self.viscos = 1.0e-3
-        self.densit = 998.2
+        self.density = 998.2
         self.capacity = 4.1816e3
         self.conduct = 1.0
         self.gravity = 9.8
@@ -106,8 +106,8 @@ class benard():
         self.SU = np.zeros((self.nx, self.ny))
         self.SP = np.zeros((self.nx, self.ny))
         
-        self.flowin = (self.SNS*self.densit*self.uwall).sum()
-        self.xmonin = (self.SNS*self.densit*self.uwall*self.uwall).sum()
+        self.flowin = (self.SNS*self.density*self.uwall).sum()
+        self.xmonin = (self.SNS*self.density*self.uwall*self.uwall).sum()
 
 
     def lisolv(self, istart, jstart, PHI):
@@ -142,10 +142,10 @@ class benard():
         
         for i in range(2, self.nim1):
             for j in range(1, self.njm1):
-                cn = 0.5*self.densit*(self.V[i  , j+1] + self.V[i-1, j+1])*self.SEWU[i]
-                cs = 0.5*self.densit*(self.V[i  , j  ] + self.V[i-1, j  ])*self.SEWU[i]
-                ce = 0.5*self.densit*(self.U[i+1, j  ] + self.U[i  , j  ])*self.SNS[j]
-                cw = 0.5*self.densit*(self.U[i  , j  ] + self.U[i-1, j  ])*self.SNS[j]
+                cn = 0.5*self.density*(self.V[i  , j+1] + self.V[i-1, j+1])*self.SEWU[i]
+                cs = 0.5*self.density*(self.V[i  , j  ] + self.V[i-1, j  ])*self.SEWU[i]
+                ce = 0.5*self.density*(self.U[i+1, j  ] + self.U[i  , j  ])*self.SNS[j]
+                cw = 0.5*self.density*(self.U[i  , j  ] + self.U[i-1, j  ])*self.SNS[j]
                 dn = self.viscos*self.SEWU[i]/self.DYNP[j]
                 ds = self.viscos*self.SEWU[i]/self.DYPS[j]
                 de = self.viscos*self.SNS[j]/self.DXEPU[i]
@@ -202,10 +202,10 @@ class benard():
         
         for i in range(1, self.nim1):
             for j in range(2, self.njm1):
-                cn = 0.5*self.densit*(self.V[i  , j+1] + self.V[i  , j  ])*self.SEW[i]
-                cs = 0.5*self.densit*(self.V[i  , j  ] + self.V[i  , j-1])*self.SEW[i]
-                ce = 0.5*self.densit*(self.U[i+1, j  ] + self.U[i+1, j-1])*self.SNSV[j]
-                cw = 0.5*self.densit*(self.U[i  , j  ] + self.U[i  , j-1])*self.SNSV[j]
+                cn = 0.5*self.density*(self.V[i  , j+1] + self.V[i  , j  ])*self.SEW[i]
+                cs = 0.5*self.density*(self.V[i  , j  ] + self.V[i  , j-1])*self.SEW[i]
+                ce = 0.5*self.density*(self.U[i+1, j  ] + self.U[i+1, j-1])*self.SNSV[j]
+                cw = 0.5*self.density*(self.U[i  , j  ] + self.U[i  , j-1])*self.SNSV[j]
                 dn = self.viscos*self.SEW[i]/self.DYNPV[j]
                 ds = self.viscos*self.SEW[i]/self.DYPSV[j]
                 de = self.viscos*self.SNSV[j]/self.DXEP[i]
@@ -216,7 +216,7 @@ class benard():
                 self.AW[i, j] = max(abs(0.5*cw), dw) + 0.5*cw
                 self.DV[i, j] = self.SEW[i]
                 self.SU[i, j] = self.DV[i, j]*(self.P[i, j-1] - self.P[i, j])
-                # self.SU[i, j] += self.densit*self.gravity*self.beta*(self.T[i, j] - self.T_old[i, j])
+                # self.SU[i, j] += self.density*self.gravity*self.beta*(self.T[i, j] - self.T_old[i, j])
                 self.SP[i, j] = 0.0
                 
         # West wall
@@ -268,15 +268,15 @@ class benard():
         
         for i in range(1, self.nim1):
             for j in range(1, self.njm1):
-                self.AN[i, j] = self.densit*self.SEW[i]*self.DV[i  , j+1]
-                self.AS[i, j] = self.densit*self.SEW[i]*self.DV[i  , j  ]
-                self.AE[i, j] = self.densit*self.SNS[j]*self.DU[i+1, j  ]
-                self.AW[i, j] = self.densit*self.SNS[j]*self.DU[i  , j  ]
+                self.AN[i, j] = self.density*self.SEW[i]*self.DV[i  , j+1]
+                self.AS[i, j] = self.density*self.SEW[i]*self.DV[i  , j  ]
+                self.AE[i, j] = self.density*self.SNS[j]*self.DU[i+1, j  ]
+                self.AW[i, j] = self.density*self.SNS[j]*self.DU[i  , j  ]
                 
-                cn = self.densit*self.V[i  , j+1]*self.SEW[i]
-                cs = self.densit*self.V[i  , j  ]*self.SEW[i]
-                ce = self.densit*self.U[i+1, j  ]*self.SNS[j]
-                cw = self.densit*self.U[i  , j  ]*self.SNS[j]
+                cn = self.density*self.V[i  , j+1]*self.SEW[i]
+                cs = self.density*self.V[i  , j  ]*self.SEW[i]
+                ce = self.density*self.U[i+1, j  ]*self.SNS[j]
+                cw = self.density*self.U[i  , j  ]*self.SNS[j]
                 smp = cn - cs + ce - cw
                 
                 self.SP[i, j] = 0.0
@@ -313,18 +313,27 @@ class benard():
         # Coefficients over value fields
         for i in range(1, self.nim1):
             for j in range(1, self.njm1):
-                cn = 0.5*self.capacity*(self.V[i  , j+1] + self.V[i-1, j+1])*self.SEW[i]
-                cs = 0.5*self.capacity*(self.V[i  , j  ] + self.V[i-1, j  ])*self.SEW[i]
-                ce = 0.5*self.capacity*(self.U[i+1, j  ] + self.U[i  , j  ])*self.SNS[j]
-                cw = 0.5*self.capacity*(self.U[i  , j  ] + self.U[i-1, j  ])*self.SNS[j]
+                
+                vn = (self.V[i  , j+1] + self.V[i-1, j+1])*self.SEW[i]
+                vs = (self.V[i  , j  ] + self.V[i-1, j  ])*self.SEW[i]
+                ve = (self.U[i+1, j  ] + self.U[i  , j  ])*self.SNS[j]
+                vw = (self.U[i  , j  ] + self.U[i-1, j  ])*self.SNS[j]
+
+                cn = 0.5*self.density*self.capacity*vn
+                cs = 0.5*self.density*self.capacity*vs
+                ce = 0.5*self.density*self.capacity*ve
+                cw = 0.5*self.density*self.capacity*vw
+                
                 dn = self.conduct*self.SEW[i]/self.DYNP[j]
                 ds = self.conduct*self.SEW[i]/self.DYPS[j]
                 de = self.conduct*self.SNS[j]/self.DXEP[i]
                 dw = self.conduct*self.SNS[j]/self.DXPW[i]
+
                 self.AN[i, j] = max(abs(0.5*cn), dn) - 0.5*cn
                 self.AS[i, j] = max(abs(0.5*cs), ds) + 0.5*cs
                 self.AE[i, j] = max(abs(0.5*ce), de) - 0.5*ce
                 self.AW[i, j] = max(abs(0.5*cw), dw) + 0.5*cw
+                
                 self.SU[i, j] = 0.0
                 self.SP[i, j] = self.t_source
 
