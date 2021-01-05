@@ -93,3 +93,4 @@ ENV/
 benard_py/*
 *.rst~
 *.rst.un~
+*.ipynb

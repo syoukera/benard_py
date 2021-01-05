@@ -1,7 +1,7 @@
 from benard import benard
 
 def main():
-    var = benard()
+    sim = benard()
 
     maxit = 100
     imon = 5
@@ -9,23 +9,20 @@ def main():
     sormax = 1.0e-3
     source = 1.0e10
 
+
     for niter in range(maxit):
 
-        var.calcu()
-        var.calcv()
-        var.calcp()
-        var.calct()
+        sim.update()
 
-        resorm = var.resorm/var.flowin
-        resoru = var.resoru/var.xmonin
-        resorv = var.resorv/var.xmonin
-
+        resorm = sim.resorm/sim.flowin
+        resoru = sim.resoru/sim.xmonin
+        resorv = sim.resorv/sim.xmonin
         # ayashi
-        resort = var.resort/var.xmonin
+        resort = sim.resort/sim.xmonin
         
         print(f'{niter} {resoru:.2e} {resorv:.2e} {resorm:.2e} ', end='')
-        print(f'{var.U[imon, jmon]:.2e} {var.V[imon, jmon]:.2e} ', end ='')
-        print(f'{var.P[imon, jmon]:.2e} {var.T[imon, jmon]:.2e}', end='\n')
+        print(f'{sim.U[imon, jmon]:.2e} {sim.V[imon, jmon]:.2e} ', end ='')
+        print(f'{sim.P[imon, jmon]:.2e} {sim.T[imon, jmon]:.2e}', end='\n')
         
         source = max(resorm, resoru, resorv, resort)
         

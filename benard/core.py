@@ -365,3 +365,10 @@ class benard():
                 
         for i in range(self.nswpu):
             self.lisolv(2, 2, self.T)      
+
+    def update(self):
+        '''Update simulation for one step'''
+        self.calcu()
+        self.calcv()
+        self.calcp()
+        self.calct()
