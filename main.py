@@ -19,11 +19,15 @@ def main():
         resorm = var.resorm/var.flowin
         resoru = var.resoru/var.xmonin
         resorv = var.resorv/var.xmonin
+
+        # ayashi
+        resort = var.resort/var.xmonin
         
         print(f'{niter} {resoru:.2e} {resorv:.2e} {resorm:.2e} ', end='')
-        print(f'{var.U[imon, jmon]:.2e} {var.V[imon, jmon]:.2e} {var.P[imon, jmon]:.2e}')
+        print(f'{var.U[imon, jmon]:.2e} {var.V[imon, jmon]:.2e} ', end ='')
+        print(f'{var.P[imon, jmon]:.2e} {var.T[imon, jmon]:.2e}', end='\n')
         
-        source = max(resorm, resoru, resorv)
+        source = max(resorm, resoru, resorv, resort)
         
         if source < sormax:
             print('Converged!')
