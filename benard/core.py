@@ -216,7 +216,9 @@ class benard():
                 self.AW[i, j] = max(abs(0.5*cw), dw) + 0.5*cw
                 self.DV[i, j] = self.SEW[i]
                 self.SU[i, j] = self.DV[i, j]*(self.P[i, j-1] - self.P[i, j])
-                # self.SU[i, j] += self.density*self.gravity*self.beta*(self.T[i, j] - self.T_old[i, j])
+                self.SU[i, j] += self.density*self.gravity*self.beta                  \
+                                 *(0.5*(self.T[i, j-1] + self.T[i, j]) - self.t_low)  \
+                                 *self.SEW[i]*self.SNSV[j]
                 self.SP[i, j] = 0.0
                 
         # West wall
@@ -337,29 +339,10 @@ class benard():
                 self.SU[i, j] = 0.0
                 self.SP[i, j] = self.t_source
 
-        # north                
-        # yp = self.YV[-1] - self.Y[-2]
-        j = self.njm1-1
-        for i in range(1, self.nim1):
-            # tmult = self.viscos/yp
-            # self.SP[i, j] = self.SP[i, j] - tmult*self.SEWU[i]
-            # self.SU[i, j] = self.SU[i, j] + tmult*self.SEWU[i]*self.U[i, j+1]
-            self.AN[i, j] = 0.0
-            
-        # south
-        # yp = self.Y[1] - self.YV[1]
-        j = 1
-        for i in range(1, self.nim1):
-            # tmult = self.viscos/yp
-            # self.SP[i, j] = self.SP[i, j] - tmult*self.SEWU[i]
-            # self.SU[i, j] = self.SU[i, j] + tmult*self.SEWU[i]*self.U[i, j-1]
-            self.AS[i, j] = 0.0
-            
-        # east and west
-        # for j in range(1, self.njm1):
-
-        self.AE[-2, :] = 0.0
-        self.AW[1, :] = 0.0
+        self.T[:, 0]  = self.t_high
+        self.T[:, -1] = self.t_low
+        self.T[0, :]  = self.T[1, :]
+        self.T[-1, :] = self.T[-2, :]
             
         self.resort = 0.0
         for i in range(2, self.nim1):
