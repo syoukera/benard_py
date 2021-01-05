@@ -5,8 +5,8 @@ class benard():
     '''Class for strage global variables'''
     
     def __init__(self):
-        self.nx = 12
-        self.ny = 12
+        self.nx = 20
+        self.ny = 20
         
         self.ni = self.nx
         self.nj = self.ny
@@ -15,10 +15,11 @@ class benard():
                 
         self.xmax = 1.0
         self.ymax = 1.0
-        self.uwall = 1.0e-4
-        self.t_high = 500.0
-        self.t_low  = 300.0
+        self.uwall = 0.0
+        self.t_high = 1.0
+        self.t_low  = 0.0
         self.t_source = 0.0
+        self.beta = 2.07e-3
         
         self.dx = self.xmax/float(self.nx-2)
         self.dy = self.ymax/float(self.ny-2)
@@ -87,18 +88,19 @@ class benard():
         # self.DV = np.zeros((self.nx, self.ny))
         
         self.U = np.zeros((self.nx, self.ny))
-        self.U[:, -1] = self.uwall
+        # self.U[:, -1] = self.uwall
         self.V = np.zeros((self.nx, self.ny))
         self.P = np.zeros((self.nx, self.ny))
         self.PP = np.zeros((self.nx, self.ny))
         self.T = np.zeros((self.nx, self.ny))
-        self.T[:, 0] = self.t_high
-        self.T[:, -1] = self.t_low
+        self.T[0, :] = self.t_high
+        self.T[-1, :] = self.t_low
         
         self.viscos = 1.0e-3
-        self.densit = 1000.0
-        self.capacity = 1.0
+        self.densit = 998.2
+        self.capacity = 4.1816e3
         self.conduct = 1.0
+        self.gravity = 9.8
         
         self.AP = np.zeros((self.nx, self.ny))
         self.AN = np.zeros((self.nx, self.ny))
@@ -218,6 +220,7 @@ class benard():
                 self.AW[i, j] = max(abs(0.5*cw), dw) + 0.5*cw
                 self.DV[i, j] = self.SEW[i]
                 self.SU[i, j] = self.DV[i, j]*(self.P[i, j-1] - self.P[i, j])
+                # self.SU[i, j] += self.densit*self.gravity*self.beta*(self.T[i, j] - self.T_old[i, j])
                 self.SP[i, j] = 0.0
                 
         # West wall
